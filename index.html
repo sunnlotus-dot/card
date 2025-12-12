@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Holiday Card Mobile</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- ✅ Playfair(메인 폰트) italic 포함 -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg1:#ffdee9;
+    --bg2:#b5fffc;
+    --ink:#1b1b1b;
+    --muted: rgba(27,27,27,.58);
+    --accent1:#ff4d8d;
+    --accent2:#7c5cff;
+    --accent3:#5ae1ff;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 18px 14px 22px;
+    overflow:hidden;
+  }
+
+  #snow{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{
+    width:100%;
+    max-width: 420px;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 12px;
+  }
+
+  .card{
+    width: 100%;
+    background: rgba(255,255,255,.92);
+    border-radius: 22px;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.14);
+    padding: 22px 20px 18px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .card:before{
+    content:"";
+    position:absolute;
+    inset:-60px;
+    background:
+      radial-gradient(280px 220px at 20% 10%, rgba(255,77,141,.16), transparent 60%),
+      radial-gradient(260px 220px at 90% 20%, rgba(90,225,255,.18), transparent 60%),
+      radial-gradient(260px 220px at 55% 110%, rgba(124,92,255,.14), transparent 60%);
+    pointer-events:none;
+  }
+
+  .inner{position:relative; z-index:1;}
+
+  /* ✅ 메인 폰트 Playfair italic */
+  .title{
+    margin: 0 0 10px 0;
+    font-family: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 34px;
+    letter-spacing: -0.6px;
+    line-height: 1.05;
+    color: transparent;
+    background: linear-gradient(45deg, var(--accent1), var(--accent2), var(--accent3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: 0 10px 26px rgba(255,77,141,.14);
+  }
+
+  .meta{
+    display:flex;
+    justify-content:center;
+    gap: 10px;
+    margin: 8px 0 10px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    flex-wrap:wrap;
+  }
+
+  .field{
+    display:inline-flex;
+    align-items:baseline;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.62);
+    box-shadow: 0 10px 22px rgba(0,0,0,.06);
+  }
+
+  .label{
+    font-family: "Playfair Display", ui-serif, Georgia, serif;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+
+  /* ✅ 인풋이지만 인풋처럼 안 보이게: 테두리/배경 제거 */
+  .input{
+    appearance:none;
+    -webkit-appearance:none;
+    border:none;
+    outline:none;
+    background:transparent;
+    color: rgba(27,27,27,.86);
+    font-weight: 800;
+    font-size: 14px;
+    width: 96px;
+    text-align:left;
+    padding: 0;
+    margin: 0;
+  }
+  .input::placeholder{color: rgba(27,27,27,.32)}
+  .input:focus{
+    /* 포커스만 살짝 표시(테두리 X, 언더라인 정도) */
+    box-shadow: inset 0 -2px 0 rgba(255,77,141,.35);
+  }
+
+  .messageBox{
+    margin-top: 10px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.72);
+    padding: 14px 14px 12px;
+    box-shadow: 0 12px 26px rgba(0,0,0,.06);
+  }
+
+  textarea{
+    width:100%;
+    border:none;
+    outline:none;
+    resize:none;
+    background:transparent;
+    color: rgba(27,27,27,.88);
+    font-size: 15px;
+    line-height: 1.55;
+    letter-spacing:-0.2px;
+    font-weight: 600;
+    min-height: 84px;
+    text-align:center;
+    padding: 0;
+    margin: 0;
+  }
+  textarea::placeholder{color: rgba(27,27,27,.30)}
+  textarea:focus{
+    box-shadow: inset 0 -2px 0 rgba(90,225,255,.28);
+  }
+
+  /* ✅ 카드 밖 다운로드 버튼 */
+  .downloadBtn{
+    width: 100%;
+    border:none;
+    border-radius: 16px;
+    padding: 12px 16px;
+    cursor:pointer;
+    color:#fff;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing:-.2px;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    box-shadow: 0 10px 22px rgba(0,0,0,.18);
+  }
+  .downloadBtn:active{transform: scale(.99)}
+
+  .miniHint{
+    font-size: 12px;
+    color: rgba(255,255,255,.84);
+    text-align:center;
+    margin-top: 2px;
+  }
+</style>
+</head>
+
+<body>
+<canvas id="snow"></canvas>
+
+<div class="wrap">
+  <!-- ✅ 캡처 대상: 이 카드만 -->
+  <div class="card" id="card">
+    <div class="inner">
+      <h1 class="title">Happy Holidays ✦</h1>
+
+      <div class="meta">
+        <div class="field">
+          <span class="label">To</span>
+          <input class="input" id="toName" value="해연님" placeholder="이름" />
+        </div>
+        <div class="field">
+          <span class="label">From</span>
+          <input class="input" id="fromName" value="Monobi" placeholder="이름" />
+        </div>
+      </div>
+
+      <div class="messageBox">
+        <textarea id="msg" placeholder="메시지를 입력해 주세요.">2025년, 더 가볍고 선명하게.
+작은 기쁨이 오래 남는 하루 되세요!</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 카드 밖 버튼(저장 시 버튼이 캡처에 포함되지 않음) -->
+  <button class="downloadBtn" id="downloadBtn">다운로드</button>
+  <div class="miniHint">PNG로 저장됩니다 ❄️</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+  // ❄️ Snow
+  const snow = document.getElementById('snow');
+  const sctx = snow.getContext('2d');
+  let w, h;
+  const flakes = [];
+  const FLAKE_COUNT = 80;
+
+  function resize(){
+    w = snow.width = window.innerWidth;
+    h = snow.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  function addFlake(){
+    flakes.push({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      r: rand(1.2, 4.0),
+      sp: rand(0.8, 2.2),
+      drift: rand(-0.6, 0.6),
+      a: rand(0.35, 0.9),
+      wob: rand(0, Math.PI*2)
+    });
+  }
+  for(let i=0;i<FLAKE_COUNT;i++) addFlake();
+
+  function tick(){
+    sctx.clearRect(0,0,w,h);
+    sctx.fillStyle = "rgba(255,255,255,0.85)";
+    sctx.beginPath();
+
+    for(const f of flakes){
+      f.wob += 0.02;
+      f.x += f.drift + Math.sin(f.wob)*0.25;
+      f.y += f.sp;
+
+      if(f.y > h+10){ f.y = -10; f.x = Math.random()*w; }
+      if(f.x < -20) f.x = w+20;
+      if(f.x > w+20) f.x = -20;
+
+      sctx.moveTo(f.x, f.y);
+      sctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+    }
+    sctx.fill();
+
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // 📸 Download (PNG)
+  const btn = document.getElementById('downloadBtn');
+  btn.addEventListener('click', async ()=>{
+    const card = document.getElementById('card');
+    // textarea 줄바꿈 높이 자동 보정
+    autoGrow(document.getElementById('msg'));
+
+    const canvas = await html2canvas(card, {
+      backgroundColor: null,
+      scale: Math.min(3, (window.devicePixelRatio || 1) * 2),
+      useCORS: true
+    });
+
+    const a = document.createElement('a');
+    a.download = 'holiday_card_mobile.png';
+    a.href = canvas.toDataURL('image/png');
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  // textarea auto grow
+  const msg = document.getElementById('msg');
+  function autoGrow(el){
+    el.style.height = "auto";
+    el.style.height = (el.scrollHeight) + "px";
+  }
+  msg.addEventListener('input', ()=>autoGrow(msg));
+  autoGrow(msg);
+</script>
+</body>
+</html>
